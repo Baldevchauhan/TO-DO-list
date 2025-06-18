@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> To-Do List</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      text-align: center;
+      background-image: url(TODO-LIST.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      height: 40px;
+      width: 230px;
+      font-size: 25px;
+      text-align: center;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-weight: bold;
+      border-radius: 1000px;
+      border: 2px solid black;
+    }
+    #result div {
+      margin-bottom: 10px;
+    }
+    span{
+      font-size: 25px;
+    }
+    button {
+      background-color: crimson;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    h2{
+      font-size: 50px;
+      font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Task Manager</h2>
+  <input id="task" type="text" placeholder="Enter task">
+  <input id="date" type="date">
+  <button onclick="add()">Add Task</button>
+
+  <div id="result"></div>
+
+  <script>
+    // Load from localStorage
+    let todolist = JSON.parse(localStorage.getItem("todolist")) || [];
+
+    function saveToLocalStorage() {
+      localStorage.setItem("todolist", JSON.stringify(todolist));
+    }
+
+    function add() {
+      let task = document.getElementById('task').value.trim();
+      let date = document.getElementById('date').value;
+
+      if (task === "" || date === "") {
+        alert("Please enter both task and date.");
+        return;
+      }
+
+      let entry = `${task} - ${date}`;
+      todolist.push(entry);
+      saveToLocalStorage();
+
+      document.getElementById('task').value = "";
+      document.getElementById('date').value = "";
+
+      display();
+    }
+
+    function display() {
+      let show = document.querySelector('#result');
+      let newbu = '';
+
+      for (let i = 0; i < todolist.length; i++) {
+        newbu += `
+          <div>
+            <span>${todolist[i]}</span>
+            <button onclick="remove(${i})">DELETE</button>
+          </div>
+        `;
+      }
+
+      show.innerHTML = newbu;
+    }
+
+    function remove(index) {
+      todolist.splice(index, 1);
+      saveToLocalStorage();
+      display();
+    }
+
+    // Display tasks when page loads
+    window.onload = display;
+  </script>
+
+</body>
+</html>
+
